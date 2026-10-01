@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "5iGqGMOGwUE=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\LeaveManagement.Core\\LeaveManagement.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\SriLakshmiBillapati\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}

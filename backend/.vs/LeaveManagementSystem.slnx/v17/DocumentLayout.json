@@ -1,0 +1,70 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9B2DC565-EAED-69AB-D7C1-F9FA0FF9D64E}|LeaveManagement.Api\\LeaveManagement.Api.csproj|c:\\users\\srilakshmibillapati\\.bob\\playground\\employee-leave-management-system\\backend\\leavemanagement.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9B2DC565-EAED-69AB-D7C1-F9FA0FF9D64E}|LeaveManagement.Api\\LeaveManagement.Api.csproj|solutionrelative:leavemanagement.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B2DC565-EAED-69AB-D7C1-F9FA0FF9D64E}|LeaveManagement.Api\\LeaveManagement.Api.csproj|c:\\users\\srilakshmibillapati\\.bob\\playground\\employee-leave-management-system\\backend\\leavemanagement.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9B2DC565-EAED-69AB-D7C1-F9FA0FF9D64E}|LeaveManagement.Api\\LeaveManagement.Api.csproj|solutionrelative:leavemanagement.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B2DC565-EAED-69AB-D7C1-F9FA0FF9D64E}|LeaveManagement.Api\\LeaveManagement.Api.csproj|c:\\users\\srilakshmibillapati\\.bob\\playground\\employee-leave-management-system\\backend\\leavemanagement.api\\leavemanagement.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{9B2DC565-EAED-69AB-D7C1-F9FA0FF9D64E}|LeaveManagement.Api\\LeaveManagement.Api.csproj|solutionrelative:leavemanagement.api\\leavemanagement.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\LeaveManagement.Api\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "LeaveManagement.Api\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\LeaveManagement.Api\\appsettings.Development.json",
+              "RelativeToolTip": "LeaveManagement.Api\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-22T14:57:28.849Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\LeaveManagement.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "LeaveManagement.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\LeaveManagement.Api\\appsettings.json",
+              "RelativeToolTip": "LeaveManagement.Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-09-22T14:56:48.237Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LeaveManagement.Api.csproj",
+              "DocumentMoniker": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\LeaveManagement.Api\\LeaveManagement.Api.csproj",
+              "RelativeDocumentMoniker": "LeaveManagement.Api\\LeaveManagement.Api.csproj",
+              "ToolTip": "C:\\Users\\SriLakshmiBillapati\\.bob\\playground\\Employee-Leave-Management-System\\backend\\LeaveManagement.Api\\LeaveManagement.Api.csproj",
+              "RelativeToolTip": "LeaveManagement.Api\\LeaveManagement.Api.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-09-22T14:56:40.746Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
