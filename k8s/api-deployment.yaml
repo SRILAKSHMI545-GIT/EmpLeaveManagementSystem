@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leave-api-deployment
+  namespace: leave-management
+  labels:
+    app: leave-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: leave-api
+  template:
+    metadata:
+      labels:
+        app: leave-api
+    spec:
+      containers:
+        - name: leave-api
+          image: leave-management-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: leave-api-config
+            - secretRef:
+                name: leave-api-secret
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leave-api-service
+  namespace: leave-management
+spec:
+  selector:
+    app: leave-api
+  ports:
+    - port: 5000
+      targetPort: 5000

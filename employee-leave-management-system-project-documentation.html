@@ -1,0 +1,730 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Employee Leave Management System — Documentation</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1f2328;
+    background: #ffffff;
+    padding: 32px 16px 48px;
+  }
+  .page { max-width: 760px; margin: 0 auto; }
+
+  /* Header */
+  .doc-header {
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  .doc-header h1 { font-size: 22px; font-weight: 700; color: #1f2328; }
+  .doc-header .subtitle { color: #57606a; margin-top: 4px; font-size: 13px; }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .badge {
+    background: #f7f8fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #57606a;
+    letter-spacing: 0.4px;
+  }
+  .badge.blue { background: #eff6ff; color: #3b82d4; border-color: #bfdbfe; }
+  .badge.purple { background: #f5f3ff; color: #7c5cd8; border-color: #ddd6fe; }
+  .badge.green { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+
+  /* TOC */
+  .toc {
+    background: #f7f8fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 36px;
+  }
+  .toc h2 { font-size: 13px; font-weight: 700; color: #57606a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .toc ol { padding-left: 18px; }
+  .toc li { margin: 4px 0; }
+  .toc a { color: #3b82d4; text-decoration: none; font-size: 13px; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* Sections */
+  section { margin-bottom: 40px; }
+  h2.section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2328;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  h3 { font-size: 14px; font-weight: 700; color: #1f2328; margin: 20px 0 8px; }
+  h4 { font-size: 13px; font-weight: 600; color: #57606a; margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+  p { margin-bottom: 10px; color: #1f2328; }
+
+  /* Code blocks */
+  pre {
+    background: #f7f8fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 10px 0 14px;
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  code { font-family: "Cascadia Code", "Consolas", "Courier New", monospace; }
+  p code, li code {
+    background: #f7f8fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 12px;
+    font-family: "Cascadia Code", "Consolas", monospace;
+  }
+
+  /* Note / tip boxes */
+  .note {
+    border-left: 3px solid #3b82d4;
+    background: #eff6ff;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0 14px;
+    font-size: 13px;
+    color: #1e3a5f;
+  }
+  .tip {
+    border-left: 3px solid #16a34a;
+    background: #f0fdf4;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0 14px;
+    font-size: 13px;
+    color: #14532d;
+  }
+  .warn {
+    border-left: 3px solid #d97706;
+    background: #fffbeb;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 10px 0 14px;
+    font-size: 13px;
+    color: #78350f;
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 13px; }
+  th { background: #f7f8fa; text-align: left; padding: 8px 12px; border: 1px solid #e5e7eb; font-weight: 600; color: #57606a; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3px; }
+  td { padding: 8px 12px; border: 1px solid #e5e7eb; vertical-align: top; }
+  tr:hover td { background: #f7f8fa; }
+
+  /* Architecture diagram */
+  .arch-box {
+    display: flex;
+    gap: 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 12px 0 18px;
+    font-size: 12.5px;
+  }
+  .arch-layer {
+    flex: 1;
+    padding: 14px 12px;
+    border-right: 1px solid #e5e7eb;
+    text-align: center;
+  }
+  .arch-layer:last-child { border-right: none; }
+  .arch-layer .layer-title { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .arch-layer ul { list-style: none; padding: 0; }
+  .arch-layer li { margin: 4px 0; padding: 3px 6px; border-radius: 3px; font-size: 12px; }
+  .layer-fe { background: #f5f3ff; } .layer-fe .layer-title { color: #7c5cd8; } .layer-fe li { background: #ede9fe; color: #4c1d95; }
+  .layer-api { background: #eff6ff; } .layer-api .layer-title { color: #3b82d4; } .layer-api li { background: #dbeafe; color: #1e3a5f; }
+  .layer-core { background: #f0fdf4; } .layer-core .layer-title { color: #16a34a; } .layer-core li { background: #dcfce7; color: #14532d; }
+  .layer-infra { background: #fff7ed; } .layer-infra .layer-title { color: #d97706; } .layer-infra li { background: #fed7aa; color: #7c2d12; }
+
+  /* Class cards */
+  .class-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin: 14px 0;
+    overflow: hidden;
+  }
+  .class-card-header {
+    background: #f7f8fa;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .class-card-header .class-name { font-weight: 700; font-size: 14px; color: #1f2328; font-family: "Cascadia Code", monospace; }
+  .class-card-header .class-path { font-size: 11px; color: #57606a; }
+  .class-card-body { padding: 12px 16px; }
+  .class-card-body p { margin-bottom: 8px; font-size: 13px; }
+  .method-list { margin: 6px 0; padding-left: 16px; }
+  .method-list li { margin: 4px 0; font-size: 12.5px; }
+  .method-list li code { font-size: 12px; }
+
+  /* Credentials table */
+  .creds td:first-child { font-family: "Cascadia Code", monospace; font-size: 12px; }
+  .role-pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .role-admin { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+  .role-manager { background: #eff6ff; color: #3b82d4; border: 1px solid #bfdbfe; }
+  .role-employee { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+
+  /* Flow steps */
+  .flow { display: flex; flex-direction: column; gap: 0; margin: 12px 0 16px; }
+  .flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; }
+  .flow-step:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 26px; height: 26px;
+    background: #3b82d4; color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; font-size: 13px; color: #1f2328; margin-bottom: 2px; }
+  .step-body span { font-size: 12.5px; color: #57606a; }
+
+  /* Footer */
+  .doc-footer {
+    border-top: 1px solid #e5e7eb;
+    margin-top: 48px;
+    padding-top: 14px;
+    text-align: center;
+    font-size: 12px;
+    color: #57606a;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  
+  <div class="doc-header">
+    <h1>📋 Employee Leave Management System</h1>
+    <p class="subtitle">Complete project guide — how to set up, run, use, and understand the codebase</p>
+    <div class="badges">
+      <span class="badge blue">ASP.NET Core 8</span>
+      <span class="badge purple">Angular 18</span>
+      <span class="badge green">JWT Auth</span>
+      <span class="badge">Entity Framework Core</span>
+      <span class="badge">SQL Server / In-Memory DB</span>
+      <span class="badge">FluentValidation</span>
+    </div>
+  </div>
+
+  
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#overview">Project Overview</a></li>
+      <li><a href="#architecture">Architecture &amp; Structure</a></li>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#run-backend">Running the Backend</a></li>
+      <li><a href="#run-frontend">Running the Frontend</a></li>
+      <li><a href="#default-accounts">Default Accounts &amp; Test Data</a></li>
+      <li><a href="#how-to-use">How to Use the Application</a></li>
+      <li><a href="#api-reference">API Endpoints Quick Reference</a></li>
+      <li><a href="#key-classes">Key Classes to Understand</a></li>
+      <li><a href="#leave-types">Leave Types &amp; Quotas</a></li>
+    </ol>
+  </div>
+
+  
+  <section id="overview">
+    <h2 class="section-title">1. Project Overview</h2>
+    <p>The <strong>Employee Leave Management System</strong> is a full-stack web application that allows employees to apply for leave, and managers/admins to review, approve, or reject those requests. It tracks leave balances per employee, per leave type, per year — and automatically deducts days when leave is approved.</p>
+    <p><strong>Who it's for:</strong></p>
+    <table>
+      <thead><tr><th>Role</th><th>What they can do</th></tr></thead>
+      <tbody>
+        <tr><td><span class="role-pill role-employee">Employee</span></td><td>View leave balances, submit leave requests, cancel own requests</td></tr>
+        <tr><td><span class="role-pill role-manager">Manager</span></td><td>All employee actions + view/approve/reject team requests, team calendar, team balances</td></tr>
+        <tr><td><span class="role-pill role-admin">Admin</span></td><td>Full access — all requests, all users, all balances system-wide</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  
+  <section id="architecture">
+    <h2 class="section-title">2. Architecture &amp; Project Structure</h2>
+    <p>The project follows a clean <strong>layered / N-tier architecture</strong>:</p>
+    <div class="arch-box">
+      <div class="arch-layer layer-fe">
+        <div class="layer-title">Frontend</div>
+        <ul>
+          <li>Angular 18 SPA</li>
+          <li>LoginComponent</li>
+          <li>EmployeeDashboard</li>
+          <li>ManagerDashboard</li>
+          <li>AuthService</li>
+          <li>LeaveService</li>
+          <li>AuthGuard</li>
+          <li>JWT Interceptor</li>
+        </ul>
+      </div>
+      <div class="arch-layer layer-api">
+        <div class="layer-title">API Layer</div>
+        <ul>
+          <li>AuthController</li>
+          <li>LeaveRequestsController</li>
+          <li>LeaveBalancesController</li>
+          <li>MetadataController</li>
+          <li>JWT Middleware</li>
+          <li>Exception Handler</li>
+        </ul>
+      </div>
+      <div class="arch-layer layer-core">
+        <div class="layer-title">Core Layer</div>
+        <ul>
+          <li>Entities (User…)</li>
+          <li>Interfaces</li>
+          <li>DTOs</li>
+          <li>Enums</li>
+          <li>Validators</li>
+          <li>Exceptions</li>
+        </ul>
+      </div>
+      <div class="arch-layer layer-infra">
+        <div class="layer-title">Infrastructure</div>
+        <ul>
+          <li>AppDbContext</li>
+          <li>DbInitializer</li>
+          <li>Repository&lt;T&gt;</li>
+          <li>AuthService</li>
+          <li>LeaveService</li>
+          <li>JwtTokenGenerator</li>
+        </ul>
+      </div>
+    </div>
+    <h3>Folder Layout</h3>
+    <pre><code>Employee-Leave-Management-System/
+├── backend/
+│   ├── LeaveManagement.Api/          ← ASP.NET Core Web API (entry point)
+│   │   ├── Controllers/              ← HTTP endpoints
+│   │   ├── Middleware/               ← Global exception handler
+│   │   ├── Program.cs                ← App bootstrap &amp; DI setup
+│   │   └── appsettings.json          ← Configuration (DB, JWT)
+│   ├── LeaveManagement.Core/         ← Business rules, contracts
+│   │   ├── Entities/                 ← Database models
+│   │   ├── Interfaces/               ← Service + repository contracts
+│   │   ├── DTOs/                     ← Data transfer objects
+│   │   ├── Enums/                    ← UserRole, LeaveRequestStatus
+│   │   └── Validators/               ← FluentValidation rules
+│   └── LeaveManagement.Infrastructure/ ← Data access + services
+│       ├── Data/                     ← AppDbContext, DbInitializer
+│       ├── Repositories/             ← Generic repository
+│       └── Services/                 ← AuthService, LeaveService, JwtTokenGenerator
+└── frontend/
+    └── leave-management-ui/          ← Angular 18 SPA
+        └── src/app/
+            ├── components/           ← Login, EmployeeDashboard, ManagerDashboard, Navbar
+            └── core/                 ← Services, Guards, Interceptors, Models</code></pre>
+  </section>
+
+  
+  <section id="prerequisites">
+    <h2 class="section-title">3. Prerequisites</h2>
+    <table>
+      <thead><tr><th>Tool</th><th>Version</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>.NET SDK</td><td>8.0 or later</td><td>Run the backend API</td></tr>
+        <tr><td>Node.js</td><td>18.x or later</td><td>Run the Angular frontend</td></tr>
+        <tr><td>npm</td><td>9.x or later</td><td>Install frontend packages</td></tr>
+        <tr><td>SQL Server <em>(optional)</em></td><td>Any recent version</td><td>Persistent database (not needed for quick start)</td></tr>
+        <tr><td>Angular CLI <em>(optional)</em></td><td>18.x</td><td>Useful for development</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      <strong>💡 Quick Start Tip:</strong> The backend supports an <strong>in-memory database</strong> mode — no SQL Server needed. Just pass the flag shown below and everything seeds automatically.
+    </div>
+  </section>
+
+  
+  <section id="run-backend">
+    <h2 class="section-title">4. Running the Backend</h2>
+
+    <h3>Option A — In-Memory Database (Quickest)</h3>
+    <p>No database installation required. Data is seeded automatically on startup.</p>
+    <pre><code># From the project root
+cd backend\LeaveManagement.Api
+
+dotnet run --UseInMemoryDatabase=true --urls "http://localhost:5000"</code></pre>
+    <div class="note">
+      The API will be available at <strong>http://localhost:5000</strong><br />
+      Swagger UI (interactive API docs) at <strong>http://localhost:5000/swagger</strong>
+    </div>
+
+    <h3>Option B — SQL Server</h3>
+    <p>Edit <code>backend\LeaveManagement.Api\appsettings.json</code> and update the connection string:</p>
+    <pre><code>"ConnectionStrings": {
+  "DefaultConnection": "Server=YOUR_SERVER;Database=LeaveManagementDb;Trusted_Connection=True;TrustServerCertificate=True"
+}</code></pre>
+    <p>Then run normally:</p>
+    <pre><code>cd backend\LeaveManagement.Api
+dotnet run --urls "http://localhost:5000"</code></pre>
+    <p>The database and tables are <strong>created automatically</strong> on first run via <code>EnsureCreatedAsync()</code>, and seed data is inserted if the database is empty.</p>
+
+    <h3>Verifying the Backend is Running</h3>
+    <p>Open your browser and go to <strong>http://localhost:5000/swagger</strong> — you should see the Swagger UI with all API endpoints listed.</p>
+  </section>
+
+  
+  <section id="run-frontend">
+    <h2 class="section-title">5. Running the Frontend</h2>
+    <pre><code># From the project root
+cd frontend\leave-management-ui
+
+# Install dependencies (first time only)
+npm install
+
+# Start the dev server
+npm start</code></pre>
+    <div class="note">
+      The Angular app runs at <strong>http://localhost:4200</strong><br />
+      It communicates with the backend API at <strong>http://localhost:5000</strong>
+    </div>
+    <div class="warn">
+      <strong>⚠️ Start order matters:</strong> Always start the <strong>backend first</strong>, then the frontend. The Angular app needs the API to be running to log in and fetch data.
+    </div>
+  </section>
+
+  
+  <section id="default-accounts">
+    <h2 class="section-title">6. Default Accounts &amp; Test Data</h2>
+    <p>The database is automatically seeded with these accounts on first run. All share the same password:</p>
+    <table class="creds">
+      <thead><tr><th>Name</th><th>Email</th><th>Password</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Admin User</td>
+          <td>admin@company.com</td>
+          <td>Password123!</td>
+          <td><span class="role-pill role-admin">Admin</span></td>
+        </tr>
+        <tr>
+          <td>Sarah Connor</td>
+          <td>manager@company.com</td>
+          <td>Password123!</td>
+          <td><span class="role-pill role-manager">Manager</span></td>
+        </tr>
+        <tr>
+          <td>John Doe</td>
+          <td>employee@company.com</td>
+          <td>Password123!</td>
+          <td><span class="role-pill role-employee">Employee</span></td>
+        </tr>
+        <tr>
+          <td>Alice Smith</td>
+          <td>alice@company.com</td>
+          <td>Password123!</td>
+          <td><span class="role-pill role-employee">Employee</span></td>
+        </tr>
+        <tr>
+          <td>Bob Johnson</td>
+          <td>bob@company.com</td>
+          <td>Password123!</td>
+          <td><span class="role-pill role-employee">Employee</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>John Doe, Alice Smith, and Bob Johnson all report to <strong>Sarah Connor</strong> (Engineering department).</p>
+    <p>Sample leave requests are also seeded — including approved and pending requests — so dashboards are populated immediately.</p>
+  </section>
+
+  
+  <section id="how-to-use">
+    <h2 class="section-title">7. How to Use the Application</h2>
+
+    <h3>As an Employee</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Log in</strong><span>Go to http://localhost:4200, enter your email and password (e.g. employee@company.com / Password123!)</span></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>View your leave balances</strong><span>The Employee Dashboard shows how many days you have remaining for each leave type this year.</span></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Submit a leave request</strong><span>Choose a leave type, pick start and end dates, provide a reason, and submit. The system automatically calculates working days (weekends excluded) and checks your balance.</span></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>Track your requests</strong><span>All your requests are listed with their current status: Pending, Approved, Rejected, or Cancelled.</span></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>Cancel a request</strong><span>You can cancel your own Pending or Approved requests. If an approved request is cancelled, your leave balance is automatically restored.</span></div>
+      </div>
+    </div>
+
+    <h3>As a Manager</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Log in as manager</strong><span>Use manager@company.com / Password123!</span></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>View team leave requests</strong><span>The Manager Dashboard shows all pending and historical requests from your direct reports.</span></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Approve or Reject requests</strong><span>Click Approve or Reject on any Pending request. You can optionally add a comment for the employee. Approving deducts days from the employee's balance.</span></div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>View team balances &amp; calendar</strong><span>See each team member's remaining leave days, and a calendar view of all upcoming approved/pending leave across the team.</span></div>
+      </div>
+    </div>
+
+    <h3>Business Rules to Know</h3>
+    <ul style="padding-left:18px;font-size:13px;line-height:2">
+      <li>Overlapping leave requests (Pending or Approved) are <strong>not allowed</strong> for the same employee.</li>
+      <li>Requests covering only weekends are <strong>rejected</strong> (0 working days).</li>
+      <li>You <strong>cannot request more days</strong> than your remaining balance.</li>
+      <li>Only the employee's <strong>direct manager</strong> (or an Admin) can approve/reject their requests.</li>
+      <li>Cancelling an already-approved request <strong>restores</strong> the balance.</li>
+    </ul>
+  </section>
+
+  
+  <section id="api-reference">
+    <h2 class="section-title">8. API Endpoints Quick Reference</h2>
+    <p>Full interactive docs at <strong>http://localhost:5000/swagger</strong>. All endpoints (except register/login) require a <code>Bearer</code> JWT token in the <code>Authorization</code> header.</p>
+
+    <h3>Authentication — <code>/api/auth</code></h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td>/api/auth/register</td><td>Public</td><td>Register a new user</td></tr>
+        <tr><td>POST</td><td>/api/auth/login</td><td>Public</td><td>Login and get JWT + refresh token</td></tr>
+        <tr><td>POST</td><td>/api/auth/refresh-token</td><td>Public</td><td>Get a new JWT using refresh token</td></tr>
+        <tr><td>POST</td><td>/api/auth/revoke-token</td><td>Authenticated</td><td>Invalidate a refresh token (logout)</td></tr>
+        <tr><td>GET</td><td>/api/auth/profile</td><td>Authenticated</td><td>Get current user's profile</td></tr>
+        <tr><td>GET</td><td>/api/auth/team-members</td><td>Manager/Admin</td><td>Get direct reports</td></tr>
+        <tr><td>GET</td><td>/api/auth/users</td><td>Admin only</td><td>Get all users</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Leave Requests — <code>/api/leave-requests</code></h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/leave-requests/my</td><td>Authenticated</td><td>My own leave requests</td></tr>
+        <tr><td>POST</td><td>/api/leave-requests</td><td>Authenticated</td><td>Submit a new leave request</td></tr>
+        <tr><td>PUT</td><td>/api/leave-requests/{id}/cancel</td><td>Authenticated</td><td>Cancel own request</td></tr>
+        <tr><td>GET</td><td>/api/leave-requests/team</td><td>Manager/Admin</td><td>Team's leave requests (filter by status)</td></tr>
+        <tr><td>PUT</td><td>/api/leave-requests/{id}/approve</td><td>Manager/Admin</td><td>Approve a pending request</td></tr>
+        <tr><td>PUT</td><td>/api/leave-requests/{id}/reject</td><td>Manager/Admin</td><td>Reject a pending request</td></tr>
+        <tr><td>GET</td><td>/api/leave-requests/team/calendar</td><td>Manager/Admin</td><td>Team calendar view</td></tr>
+        <tr><td>GET</td><td>/api/leave-requests/all</td><td>Admin only</td><td>All requests in system</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Leave Balances — <code>/api/leavebalances</code></h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td>/api/leavebalances/my?year=2025</td><td>Authenticated</td><td>My leave balances for a year</td></tr>
+        <tr><td>GET</td><td>/api/leavebalances/team?year=2025</td><td>Manager/Admin</td><td>Team's leave balances</td></tr>
+        <tr><td>GET</td><td>/api/leavebalances/all?year=2025</td><td>Admin only</td><td>All employee balances</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  
+  <section id="key-classes">
+    <h2 class="section-title">9. Key Classes to Understand</h2>
+
+    <h3>Entities (Core Data Models)</h3>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge blue">Entity</span>
+        <span class="class-name">User</span>
+        <span class="class-path">backend/LeaveManagement.Core/Entities/User.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>Represents any person in the system. Supports a self-referencing hierarchy — a User has a <code>ManagerId</code> pointing to another User, and a collection of <code>DirectReports</code>.</p>
+        <p><strong>Key properties:</strong> <code>Id</code>, <code>Name</code>, <code>Email</code>, <code>PasswordHash</code>, <code>Role</code> (Employee / Manager / Admin), <code>DepartmentId</code>, <code>ManagerId</code>, <code>IsActive</code></p>
+      </div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge blue">Entity</span>
+        <span class="class-name">LeaveRequest</span>
+        <span class="class-path">backend/LeaveManagement.Core/Entities/LeaveRequest.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>Records a single leave application from an employee. Tracks who applied, what type of leave, date range, working days calculated, current status, and the manager's decision.</p>
+        <p><strong>Key properties:</strong> <code>UserId</code>, <code>LeaveTypeId</code>, <code>StartDate</code>, <code>EndDate</code>, <code>DaysRequested</code>, <code>Reason</code>, <code>Status</code>, <code>DecidedById</code>, <code>ManagerComment</code></p>
+      </div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge blue">Entity</span>
+        <span class="class-name">LeaveBalance</span>
+        <span class="class-path">backend/LeaveManagement.Core/Entities/LeaveBalance.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>Tracks how many leave days an employee has per leave type per year. The computed property <code>RemainingDays = TotalDays - UsedDays</code> drives all balance validation. Balances are auto-created per year when first accessed.</p>
+        <p><strong>Key properties:</strong> <code>UserId</code>, <code>LeaveTypeId</code>, <code>Year</code>, <code>TotalDays</code>, <code>UsedDays</code>, <code>RemainingDays</code></p>
+      </div>
+    </div>
+
+    <h3>Services (Business Logic)</h3>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge green">Service</span>
+        <span class="class-name">LeaveService</span>
+        <span class="class-path">backend/LeaveManagement.Infrastructure/Services/LeaveService.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>The <strong>heart of the application</strong>. Contains all leave-related business logic. This is the most important class to understand.</p>
+        <ul class="method-list">
+          <li><code>CreateLeaveRequestAsync()</code> — validates dates, checks for overlaps, verifies balance, calculates working days, creates the request</li>
+          <li><code>ApproveLeaveRequestAsync()</code> — validates manager authority, checks balance, deducts used days, updates status</li>
+          <li><code>RejectLeaveRequestAsync()</code> — validates manager authority, sets status to Rejected (no balance change)</li>
+          <li><code>CancelLeaveRequestAsync()</code> — cancels request; if it was Approved, restores the balance</li>
+          <li><code>CalculateWorkingDays()</code> — counts Mon–Fri days between two dates (weekends excluded)</li>
+          <li><code>EnsureUserBalancesForYearAsync()</code> — auto-provisions balance records if they don't exist yet for a year</li>
+          <li><code>GetTeamCalendarAsync()</code> — returns Approved/Pending leaves for a manager's team in a date window</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge green">Service</span>
+        <span class="class-name">AuthService</span>
+        <span class="class-path">backend/LeaveManagement.Infrastructure/Services/AuthService.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>Handles all identity operations: user registration (with BCrypt password hashing), login, JWT token issuance, refresh token management, and profile retrieval.</p>
+        <ul class="method-list">
+          <li><code>RegisterAsync()</code> — hashes password with BCrypt, creates user, issues JWT</li>
+          <li><code>LoginAsync()</code> — verifies credentials, issues JWT + refresh token</li>
+          <li><code>RefreshTokenAsync()</code> — validates a refresh token and issues a new JWT pair</li>
+          <li><code>RevokeTokenAsync()</code> — marks a refresh token as used (logout)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge green">Service</span>
+        <span class="class-name">JwtTokenGenerator</span>
+        <span class="class-path">backend/LeaveManagement.Infrastructure/Services/JwtTokenGenerator.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>Generates signed JWT access tokens (60 min expiry) and random refresh tokens (7 day expiry). The JWT encodes the user's <code>Id</code>, <code>Email</code>, and <code>Role</code> as claims, which controllers read to authorize actions.</p>
+      </div>
+    </div>
+
+    <h3>Infrastructure</h3>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge" style="background:#fff7ed;color:#d97706;border-color:#fed7aa">Data</span>
+        <span class="class-name">AppDbContext</span>
+        <span class="class-path">backend/LeaveManagement.Infrastructure/Data/AppDbContext.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>The Entity Framework Core database context. Defines all <code>DbSet</code> tables: <code>Users</code>, <code>Departments</code>, <code>LeaveTypes</code>, <code>LeaveBalances</code>, <code>LeaveRequests</code>, <code>RefreshTokens</code>. Supports both SQL Server and In-Memory modes.</p>
+      </div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge" style="background:#fff7ed;color:#d97706;border-color:#fed7aa">Data</span>
+        <span class="class-name">DbInitializer</span>
+        <span class="class-path">backend/LeaveManagement.Infrastructure/Data/DbInitializer.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>Seeds the database on startup with departments, leave types, users (admin + manager + 3 employees), leave balances for the current year, and sample leave requests. Only runs if the tables are empty.</p>
+      </div>
+    </div>
+
+    <h3>API Controllers</h3>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge purple">Controller</span>
+        <span class="class-name">LeaveRequestsController</span>
+        <span class="class-path">backend/LeaveManagement.Api/Controllers/LeaveRequestsController.cs</span>
+      </div>
+      <div class="class-card-body">
+        <p>Exposes all leave request operations as HTTP endpoints. Reads the logged-in user's ID from JWT claims (<code>ClaimTypes.NameIdentifier</code>) on every request. Role-based authorization is enforced at the action level using <code>[Authorize(Roles="Manager,Admin")]</code>.</p>
+      </div>
+    </div>
+
+    <h3>Frontend</h3>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge purple">Angular</span>
+        <span class="class-name">auth.interceptor.ts</span>
+        <span class="class-path">frontend/src/app/core/interceptors/auth.interceptor.ts</span>
+      </div>
+      <div class="class-card-body">
+        <p>An Angular HTTP interceptor that automatically attaches the stored JWT token as an <code>Authorization: Bearer ...</code> header to every outgoing API request. This means you don't need to manually add the token in each service call.</p>
+      </div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-card-header">
+        <span class="badge purple">Angular</span>
+        <span class="class-name">auth.guard.ts</span>
+        <span class="class-path">frontend/src/app/core/guards/auth.guard.ts</span>
+      </div>
+      <div class="class-card-body">
+        <p>Route guards that protect pages. <code>authGuard</code> redirects unauthenticated users to <code>/login</code>. <code>managerGuard</code> restricts the <code>/manager</code> route to users with the Manager or Admin role only.</p>
+      </div>
+    </div>
+  </section>
+
+  
+  <section id="leave-types">
+    <h2 class="section-title">10. Leave Types &amp; Default Quotas</h2>
+    <table>
+      <thead><tr><th>Leave Type</th><th>Annual Quota (days)</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Annual Leave</td><td>20</td><td>Standard paid time off</td></tr>
+        <tr><td>Sick Leave</td><td>10</td><td>Medical illness and health recovery</td></tr>
+        <tr><td>Casual Leave</td><td>7</td><td>Short personal leave and urgent matters</td></tr>
+        <tr><td>Maternity / Paternity</td><td>60</td><td>Parental leave for newborn or adoption</td></tr>
+        <tr><td>Unpaid Leave</td><td>30</td><td>Leave without pay for special circumstances</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      <strong>Enums used in code:</strong><br />
+      <code>UserRole</code>: Employee = 1, Manager = 2, Admin = 3<br />
+      <code>LeaveRequestStatus</code>: Pending = 1, Approved = 2, Rejected = 3, Cancelled = 4
+    </div>
+  </section>
+
+  <div class="doc-footer">
+    Made with IBM Bob
+  </div>
+</div>
+</body>
+</html>

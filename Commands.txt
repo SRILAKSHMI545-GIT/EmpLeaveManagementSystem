@@ -1,0 +1,6 @@
+cd LeaveManagement.Api
+dotnet run --UseInMemoryDatabase=true --urls "http://localhost:5000"
+
+
+C:\Users\SriLakshmiBillapati\.bob\playground\Employee-Leave-Management-System\frontend\leave-management-ui  
+npm start

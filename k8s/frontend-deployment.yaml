@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leave-frontend-deployment
+  namespace: leave-management
+  labels:
+    app: leave-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: leave-frontend
+  template:
+    metadata:
+      labels:
+        app: leave-frontend
+    spec:
+      containers:
+        - name: leave-frontend
+          image: leave-management-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leave-frontend-service
+  namespace: leave-management
+spec:
+  selector:
+    app: leave-frontend
+  ports:
+    - port: 80
+      targetPort: 80
