@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { LeaveService } from '../../core/services/leave.service';
-import { Department, User } from '../../core/models/models';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +14,7 @@ import { Department, User } from '../../core/models/models';
         <div class="auth-header">
           <div class="logo-icon">🌿</div>
           <h2>Employee Leave Management</h2>
-          <p class="subtitle">{{ isRegisterMode ? 'Create a new account' : 'Sign in to access your portal' }}</p>
+          <p class="subtitle">Sign in to access your portal</p>
         </div>
 
         <!-- Notification Alerts -->
@@ -28,7 +26,7 @@ import { Department, User } from '../../core/models/models';
         </div>
 
         <!-- Quick Demo Switcher -->
-        <div class="demo-logins" *ngIf="!isRegisterMode">
+        <div class="demo-logins">
           <span class="demo-label">⚡ Quick Fill Demo:</span>
           <div class="demo-buttons">
             <button type="button" class="btn btn-demo" (click)="fillCredentials('employee@company.com', 'Password123!')">
@@ -43,17 +41,8 @@ import { Department, User } from '../../core/models/models';
           </div>
         </div>
 
-        <!-- Login / Register Form -->
+        <!-- Login Form -->
         <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
-          <!-- Fields for Register Only -->
-          <div *ngIf="isRegisterMode" class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" formControlName="name" class="form-control" placeholder="Jane Doe" />
-            <div *ngIf="authForm.get('name')?.touched && authForm.get('name')?.invalid" class="field-error">
-              Name is required.
-            </div>
-          </div>
-
           <div class="form-group">
             <label for="email">Email Address</label>
             <input type="email" id="email" formControlName="email" class="form-control" placeholder="name@company.com" />
@@ -70,37 +59,15 @@ import { Department, User } from '../../core/models/models';
             </div>
           </div>
 
-          <div *ngIf="isRegisterMode">
-            <div class="form-group">
-              <label for="role">Role</label>
-              <select id="role" formControlName="role" class="form-control">
-                <option value="Employee">Employee</option>
-                <option value="Manager">Manager</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="departmentId">Department</label>
-              <select id="departmentId" formControlName="departmentId" class="form-control">
-                <option [ngValue]="null">Select Department</option>
-                <option *ngFor="let dept of departments" [ngValue]="dept.id">{{ dept.name }}</option>
-              </select>
-            </div>
-          </div>
-
           <button type="submit" class="btn btn-primary btn-block" [disabled]="loading || authForm.invalid">
             <span *ngIf="loading" class="spinner"></span>
-            {{ isRegisterMode ? 'Register Account' : 'Sign In' }}
+            Sign In
           </button>
         </form>
 
         <div class="auth-footer">
-          <p>
-            {{ isRegisterMode ? 'Already have an account?' : "Don't have an account yet?" }}
-            <a href="javascript:void(0)" (click)="toggleMode()">
-              {{ isRegisterMode ? 'Sign In' : 'Register Here' }}
-            </a>
+          <p class="info-note">
+            🔒 Account access is managed by your administrator. Contact HR/IT for new account credentials.
           </p>
         </div>
       </div>
@@ -260,16 +227,13 @@ import { Department, User } from '../../core/models/models';
 })
 export class LoginComponent implements OnInit {
   authForm!: FormGroup;
-  isRegisterMode = false;
   loading = false;
   errorMessage = '';
   successMessage = '';
-  departments: Department[] = [];
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private leaveService: LeaveService,
     private router: Router
   ) {}
 
@@ -278,41 +242,13 @@ export class LoginComponent implements OnInit {
       this.redirectUser();
     }
     this.initForm();
-    this.loadDepartments();
   }
 
   initForm(): void {
     this.authForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      name: [''],
-      role: ['Employee'],
-      departmentId: [null]
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
-  }
-
-  loadDepartments(): void {
-    this.leaveService.getDepartments().subscribe({
-      next: res => {
-        if (res.success && res.data) {
-          this.departments = res.data;
-        }
-      }
-    });
-  }
-
-  toggleMode(): void {
-    this.isRegisterMode = !this.isRegisterMode;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    const nameControl = this.authForm.get('name');
-    if (this.isRegisterMode) {
-      nameControl?.setValidators([Validators.required]);
-    } else {
-      nameControl?.clearValidators();
-    }
-    nameControl?.updateValueAndValidity();
   }
 
   fillCredentials(email: string, pass: string): void {
@@ -326,33 +262,18 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (this.isRegisterMode) {
-      this.authService.register(this.authForm.value).subscribe({
-        next: res => {
-          this.loading = false;
-          if (res.success) {
-            this.redirectUser();
-          }
-        },
-        error: err => {
-          this.loading = false;
-          this.errorMessage = err.error?.message || (err.error?.errors ? err.error.errors.join(', ') : 'Registration failed');
+    this.authService.login(this.authForm.value).subscribe({
+      next: res => {
+        this.loading = false;
+        if (res.success) {
+          this.redirectUser();
         }
-      });
-    } else {
-      this.authService.login(this.authForm.value).subscribe({
-        next: res => {
-          this.loading = false;
-          if (res.success) {
-            this.redirectUser();
-          }
-        },
-        error: err => {
-          this.loading = false;
-          this.errorMessage = err.error?.message || 'Invalid email or password';
-        }
-      });
-    }
+      },
+      error: err => {
+        this.loading = false;
+        this.errorMessage = err.error?.message || 'Invalid email or password';
+      }
+    });
   }
 
   private redirectUser(): void {
