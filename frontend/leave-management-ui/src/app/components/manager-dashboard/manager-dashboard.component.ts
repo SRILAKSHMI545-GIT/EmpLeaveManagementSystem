@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LeaveService } from '../../core/services/leave.service';
 import { AuthService } from '../../core/services/auth.service';
-import { LeaveBalance, LeaveRequest, TeamCalendarEvent } from '../../core/models/models';
+import { Department, LeaveBalance, LeaveRequest, TeamCalendarEvent, User } from '../../core/models/models';
 
 @Component({
   selector: 'app-manager-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
     <div class="dashboard-container">
       <!-- Header -->
@@ -26,6 +26,9 @@ import { LeaveBalance, LeaveRequest, TeamCalendarEvent } from '../../core/models
           </button>
           <button class="tab-btn" [class.active]="activeTab === 'balances'" (click)="activeTab = 'balances'">
             👥 Team Balances
+          </button>
+          <button *ngIf="authService.isAdmin" class="tab-btn" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
+            ⚙️ User Management
           </button>
         </div>
       </div>
@@ -186,6 +189,123 @@ import { LeaveBalance, LeaveRequest, TeamCalendarEvent } from '../../core/models
         </div>
       </div>
 
+      <!-- TAB 4: Admin User Management -->
+      <div *ngIf="activeTab === 'users' && authService.isAdmin">
+        <div class="section-header-row">
+          <div class="section-title">
+            <h2>User Management & Directory</h2>
+          </div>
+          <button class="btn btn-primary-action" (click)="openCreateUserModal()">
+            + Add New User
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Reports To</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of allUsers">
+                <td><strong>{{ u.name }}</strong></td>
+                <td>{{ u.email }}</td>
+                <td><span class="role-chip" [ngClass]="u.role.toLowerCase()">{{ u.role }}</span></td>
+                <td>{{ u.departmentName || 'General' }}</td>
+                <td>{{ u.managerName || '—' }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="u.isActive !== false ? 'approved' : 'rejected'">
+                    {{ u.isActive !== false ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Create User Modal (Admin Only) -->
+      <div class="modal-overlay" *ngIf="showCreateUserModal">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>Add New User</h3>
+            <button class="close-btn" (click)="closeCreateUserModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div *ngIf="createUserError" class="alert alert-danger">
+              {{ createUserError }}
+            </div>
+
+            <form [formGroup]="createUserForm" (ngSubmit)="submitCreateUser()">
+              <div class="form-group">
+                <label for="userName">Full Name *</label>
+                <input id="userName" type="text" formControlName="name" class="form-control" placeholder="Jane Doe" />
+                <div *ngIf="createUserForm.get('name')?.touched && createUserForm.get('name')?.invalid" class="field-error">
+                  Name is required.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="userEmail">Email Address *</label>
+                <input id="userEmail" type="email" formControlName="email" class="form-control" placeholder="jane@company.com" />
+                <div *ngIf="createUserForm.get('email')?.touched && createUserForm.get('email')?.invalid" class="field-error">
+                  Valid email is required.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="userPassword">Temporary Password *</label>
+                <input id="userPassword" type="password" formControlName="password" class="form-control" placeholder="••••••••" />
+                <div *ngIf="createUserForm.get('password')?.touched && createUserForm.get('password')?.invalid" class="field-error">
+                  Password must be at least 6 characters.
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col">
+                  <label for="userRole">Role *</label>
+                  <select id="userRole" formControlName="role" class="form-control">
+                    <option value="Employee">Employee</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+                </div>
+
+                <div class="form-group col">
+                  <label for="userDept">Department</label>
+                  <select id="userDept" formControlName="departmentId" class="form-control">
+                    <option [ngValue]="null">Select Department</option>
+                    <option *ngFor="let dept of departments" [ngValue]="dept.id">{{ dept.name }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="userMgr">Reporting Manager</label>
+                <select id="userMgr" formControlName="managerId" class="form-control">
+                  <option [ngValue]="null">None / Top-level</option>
+                  <option *ngFor="let mgr of managersList" [ngValue]="mgr.id">{{ mgr.name }} ({{ mgr.email }})</option>
+                </select>
+              </div>
+
+              <div class="modal-footer" style="padding: 16px 0 0 0; border-top: 1px solid #e2e8f0; margin-top: 16px;">
+                <button type="button" class="btn btn-secondary" (click)="closeCreateUserModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary-action" [disabled]="submittingUser || createUserForm.invalid">
+                  <span *ngIf="submittingUser" class="spinner"></span>
+                  Create User
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       <!-- Decision Modal (Approve / Reject) -->
       <div class="modal-overlay" *ngIf="showDecisionModal && selectedRequest">
         <div class="modal-card">
@@ -271,13 +391,65 @@ import { LeaveBalance, LeaveRequest, TeamCalendarEvent } from '../../core/models
       box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
 
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
     .section-title h2 {
       font-size: 18px;
       color: #1e293b;
       font-weight: 600;
       margin-bottom: 16px;
     }
+    .section-header-row .section-title h2 {
+      margin-bottom: 0;
+    }
     .history-title { margin-top: 36px; }
+
+    .role-chip {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .role-chip.employee { background: #e0f2fe; color: #0369a1; }
+    .role-chip.manager { background: #fef3c7; color: #b45309; }
+    .role-chip.admin { background: #fce7f3; color: #be185d; }
+
+    .btn-primary-action {
+      background: #0066cc;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary-action:hover:not(:disabled) {
+      background: #0052a3;
+    }
+    .btn-primary-action:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+    .form-row .col {
+      flex: 1;
+    }
+    .field-error {
+      color: #dc2626;
+      font-size: 11px;
+      margin-top: 4px;
+    }
 
     .table-container {
       background: #ffffff;
@@ -457,12 +629,14 @@ import { LeaveBalance, LeaveRequest, TeamCalendarEvent } from '../../core/models
   `]
 })
 export class ManagerDashboardComponent implements OnInit {
-  activeTab: 'approvals' | 'calendar' | 'balances' = 'approvals';
+  activeTab: 'approvals' | 'calendar' | 'balances' | 'users' = 'approvals';
 
   pendingRequests: LeaveRequest[] = [];
   allTeamRequests: LeaveRequest[] = [];
   calendarEvents: TeamCalendarEvent[] = [];
   teamBalances: LeaveBalance[] = [];
+  allUsers: User[] = [];
+  departments: Department[] = [];
   currentYear = new Date().getFullYear();
 
   showDecisionModal = false;
@@ -471,16 +645,38 @@ export class ManagerDashboardComponent implements OnInit {
   decisionComment = '';
   submittingDecision = false;
 
+  showCreateUserModal = false;
+  createUserForm!: FormGroup;
+  submittingUser = false;
+  createUserError = '';
+
   successMessage = '';
   errorMessage = '';
 
   constructor(
     private leaveService: LeaveService,
-    private authService: AuthService
+    public authService: AuthService,
+    private fb: FormBuilder
   ) {}
 
+  get managersList(): User[] {
+    return this.allUsers.filter(u => u.role === 'Manager' || u.role === 'Admin');
+  }
+
   ngOnInit(): void {
+    this.initCreateUserForm();
     this.loadData();
+  }
+
+  initCreateUserForm(): void {
+    this.createUserForm = this.fb.group({
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      role: ['Employee', [Validators.required]],
+      departmentId: [null],
+      managerId: [null]
+    });
   }
 
   loadData(): void {
@@ -502,6 +698,56 @@ export class ManagerDashboardComponent implements OnInit {
     // Load Team Balances
     this.leaveService.getTeamBalances().subscribe({
       next: res => { if (res.success && res.data) this.teamBalances = res.data; }
+    });
+
+    // If Admin, load all users and departments
+    if (this.authService.isAdmin) {
+      this.leaveService.getAllUsers().subscribe({
+        next: res => { if (res.success && res.data) this.allUsers = res.data; }
+      });
+      this.leaveService.getDepartments().subscribe({
+        next: res => { if (res.success && res.data) this.departments = res.data; }
+      });
+    }
+  }
+
+  openCreateUserModal(): void {
+    this.createUserError = '';
+    this.createUserForm.reset({
+      name: '',
+      email: '',
+      password: '',
+      role: 'Employee',
+      departmentId: null,
+      managerId: null
+    });
+    this.showCreateUserModal = true;
+  }
+
+  closeCreateUserModal(): void {
+    this.showCreateUserModal = false;
+  }
+
+  submitCreateUser(): void {
+    if (this.createUserForm.invalid) return;
+
+    this.submittingUser = true;
+    this.createUserError = '';
+
+    this.authService.createUser(this.createUserForm.value).subscribe({
+      next: res => {
+        this.submittingUser = false;
+        if (res.success) {
+          this.successMessage = `User "${res.data?.name}" created successfully!`;
+          this.closeCreateUserModal();
+          this.loadData();
+          setTimeout(() => this.successMessage = '', 4000);
+        }
+      },
+      error: err => {
+        this.submittingUser = false;
+        this.createUserError = err.error?.message || (err.error?.errors ? err.error.errors.join(', ') : 'Failed to create user.');
+      }
     });
   }
 

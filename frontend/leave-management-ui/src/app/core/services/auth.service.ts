@@ -54,14 +54,8 @@ export class AuthService {
     );
   }
 
-  register(data: any): Observable<ApiResponse<AuthResponse>> {
-    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/auth/register`, data).pipe(
-      tap(res => {
-        if (res.success && res.data) {
-          this.setSession(res.data);
-        }
-      })
-    );
+  createUser(data: any): Observable<ApiResponse<AuthResponse>> {
+    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/auth/register`, data);
   }
 
   refreshTokenCall(): Observable<ApiResponse<AuthResponse>> {
